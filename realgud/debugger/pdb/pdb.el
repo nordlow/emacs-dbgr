@@ -46,22 +46,17 @@ discover that the buffer has prior command-buffer information and
 NO-RESET is nil, then that information which may point into other
 buffers and source buffers which may contain marks and fringe or
 marginal icons is reset."
-
-
   (interactive)
-  (let* (
-	 (cmd-str (or opt-command-line (pdb-query-cmdline
+  (let* ((cmd-str (or opt-command-line (pdb-query-cmdline
 					"pdb")))
 	 (cmd-args (split-string-and-unquote cmd-str))
 	 (parsed-args (pdb-parse-cmd-args cmd-args))
-	 (script-args (cdr cmd-args))
+	 (script-args (mapcar 'expand-file-name
+                              (cdr cmd-args)))
 	 (script-name (car script-args))
 	 (cmd-buf))
     (realgud-run-process "pdb" script-name cmd-args
-		      'pdb-track-mode no-reset)
-    )
-  )
-
+                         'pdb-track-mode no-reset)))
 
 (defalias 'pdb 'realgud:pdb)
 
